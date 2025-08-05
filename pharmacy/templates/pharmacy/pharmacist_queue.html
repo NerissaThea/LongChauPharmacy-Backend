@@ -1,40 +1,98 @@
 {% extends 'pharmacy/base.html' %}
-{% block content %}
-<h2>Pending Prescriptions</h2>
+{% load static %}
 
-{% if prescriptions %}
-<table class="table">
-  <thead>
-    <tr>
-      <th>User</th>
-      <th>Uploaded</th>
-      <th>Order</th>
-      <th>File</th>
-      <th>Action</th>
-    </tr>
-  </thead>
-  <tbody>
-    {% for p in prescriptions %}
-    <tr>
-      <td>{{ p.user.username }}</td>
-      <td>{{ p.uploaded_at }}</td>
-      <td>
-        {% if p.order %}
-          <a href="{% url 'order_detail' p.order.id %}">Order #{{ p.order.id }}</a>
-        {% else %}
-          N/A
-        {% endif %}
-      </td>
-      <td><a href="{{ p.file.url }}" target="_blank">View</a></td>
-      <td>
-        <a href="{% url 'prescription_action' p.pk 'approve' %}" class="btn btn-success btn-sm">Approve</a>
-        <a href="{% url 'prescription_action' p.pk 'reject' %}" class="btn btn-danger btn-sm">Reject</a>
-      </td>
-    </tr>
-    {% endfor %}
-  </tbody>
-</table>
-{% else %}
-  <p>No pending prescriptions.</p>
-{% endif %}
+{% block content %}
+<div class="pharmacist-queue-container">
+    <div class="queue-header">
+        <div class="header-content">
+            <div class="header-icon">
+                <i class="fas fa-clipboard-list"></i>
+            </div>
+            <div class="header-text">
+                <h2>Pending Prescriptions</h2>
+                <p>Review and process prescription requests from patients</p>
+            </div>
+        </div>
+        <div class="queue-stats">
+            <div class="stat-item">
+                <span class="stat-number">{{ prescriptions|length }}</span>
+                <span class="stat-label">Pending</span>
+            </div>
+        </div>
+    </div>
+
+    {% if prescriptions %}
+    <div class="prescriptions-grid">
+        {% for p in prescriptions %}
+        <div class="prescription-card">
+            <div class="card-header">
+                <div class="patient-info">
+                    <div class="patient-avatar">
+                        <i class="fas fa-user"></i>
+                    </div>
+                    <div class="patient-details">
+                        <h4>{{ p.user.username }}</h4>
+                        <span class="upload-time">
+                            <i class="fas fa-clock"></i>
+                            {{ p.uploaded_at|date:"M d, Y H:i" }}
+                        </span>
+                    </div>
+                </div>
+                <div class="priority-badge">
+                    <i class="fas fa-exclamation-circle"></i>
+                    New
+                </div>
+            </div>
+            
+            <div class="card-content">
+                <div class="prescription-info">
+                    <div class="info-item">
+                        <label>Order Reference:</label>
+                        <span>
+                            {% if p.order %}
+                                <a href="{% url 'order_detail' p.order.id %}" class="order-link">
+                                    <i class="fas fa-shopping-cart"></i>
+                                    Order #{{ p.order.id }}
+                                </a>
+                            {% else %}
+                                <span class="no-order">No associated order</span>
+                            {% endif %}
+                        </span>
+                    </div>
+                    
+                    <div class="prescription-file">
+                        <a href="{{ p.file.url }}" target="_blank" class="file-preview">
+                            <div class="file-icon">
+                                <i class="fas fa-file-medical"></i>
+                            </div>
+                            <span>View Prescription</span>
+                            <i class="fas fa-external-link-alt"></i>
+                        </a>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="card-actions">
+                <a href="{% url 'prescription_action' p.pk 'approve' %}" class="action-btn approve-btn">
+                    <i class="fas fa-check"></i>
+                    Approve
+                </a>
+                <a href="{% url 'prescription_action' p.pk 'reject' %}" class="action-btn reject-btn">
+                    <i class="fas fa-times"></i>
+                    Reject
+                </a>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+    {% else %}
+    <div class="empty-state">
+        <div class="empty-icon">
+            <i class="fas fa-clipboard-check"></i>
+        </div>
+        <h3>No Pending Prescriptions</h3>
+        <p>All prescriptions have been processed. Great job!</p>
+    </div>
+    {% endif %}
+</div>
 {% endblock %}

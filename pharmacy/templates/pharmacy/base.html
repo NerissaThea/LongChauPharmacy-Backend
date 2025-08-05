@@ -4,8 +4,9 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>LongChauPharmacy</title>
-    <link rel="stylesheet" href="{% static 'pharmacy/css/style.css' %}">
+    <title>Long Chau Pharmacy</title>
+    <link rel="stylesheet" type="text/css" href="{% static 'pharmacy/css/style.css' %}?v={{ request.GET.timestamp|default:'1' }}">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
 </head>
 <body>
     <div class="top-nav">
@@ -18,15 +19,13 @@
             {% if user.is_authenticated %}
                 <span style="color: white; margin-right: 15px;">Hi, {{ user.username }}</span>
                 {% if user|has_group:"Pharmacist" %}
-                    <a href="{% url 'pharmacist_queue' %}" class="btn">Prescriptions</a>
+                    <a href="{% url 'pharmacist_queue' %}" class="nav-link">Prescriptions</a>
                 {% endif %}
-                <a href="{% url 'cart' %}" class="btn">Cart</a>
-                <a href="{% url 'order_history' %}" class="btn">Order History</a>
-                <a href="{% url 'profile' %}" class="btn">My Account</a>
-                <form action="{% url 'logout' %}" method="post" style="display:inline;">
-                    {% csrf_token %}
-                    <button type="submit" class="btn">Logout</button>
-                </form>
+                <a href="{% url 'upload_prescription' %}" class="nav-link">Prescriptions</a>
+                <a href="{% url 'cart' %}" class="nav-link">Cart</a>
+                <a href="{% url 'order_history' %}" class="nav-link">Order History</a>
+                <a href="{% url 'profile' %}" class="nav-link">My Account</a>
+                <a href="{% url 'logout' %}" class="nav-link">Logout</a>
             {% else %}
                 <a href="{% url 'login' %}" class="login-btn">Login</a>
                 <a href="{% url 'signup' %}" class="register-btn">Sign Up</a>
@@ -35,10 +34,28 @@
     </div>
     <div class="banner">
         <div class="banner-content">
-            <h1>Welcome to Long Châu Pharmacy</h1>
+            <h1>Welcome to Long Chau Pharmacy</h1>
             <p>Your trusted partner in health and wellness.</p>
+            <div class="banner-features">
+                <div class="feature-highlight">
+                    <i class="fas fa-shield-alt"></i>
+                    <span>Absolute Information Security</span>
+                </div>
+                <div class="feature-highlight">
+                    <i class="fas fa-user-md"></i>
+                    <span>Professional Pharmacist Team</span>
+                </div>
+                <div class="feature-highlight">
+                    <i class="fas fa-clock"></i>
+                    <span>24/7 Service</span>
+                </div>
+                <div class="feature-highlight">
+                    <i class="fas fa-truck"></i>
+                    <span>Fast Delivery</span>
+                </div>
+            </div>
         </div>
-        <img src="{% static 'pharmacy/images/banner-image.png' %}" alt="Banner" class="banner-img">
+        <img src="{% static 'pharmacy/images/banner-image.svg' %}" alt="Banner" class="banner-img">
     </div>
 
     <div class="container-xl">
