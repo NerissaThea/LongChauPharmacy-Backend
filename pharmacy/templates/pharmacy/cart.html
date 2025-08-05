@@ -1,0 +1,48 @@
+{% extends 'pharmacy/base.html' %}
+
+{% block content %}
+<div class="cart-container">
+    <div class="cart-items">
+        <h2>Your Cart</h2>
+        {% for item in cart_items %}
+        <div class="cart-item">
+            <div class="cart-item-info">
+                <div class="product-name">{{ item.product.name }}</div>
+                {% if item.product.requires_prescription %}
+                <div class="prescription-note">* Prescription required</div>
+                {% endif %}
+            </div>
+            <div class="quantity-controls">
+                <a href="{% url 'cart_decrease' item.product.id %}" class="btn">-</a>
+                <span>{{ item.quantity }}</span>
+                <a href="{% url 'cart_increase' item.product.id %}" class="btn">+</a>
+            </div>
+            <a href="{% url 'cart_remove' item.product.id %}" class="remove-btn">&#128465;</a>
+            <div class="item-subtotal">${{ item.subtotal }}</div>
+        </div>
+        {% endfor %}
+    </div>
+    <div class="cart-summary">
+        <h3>Order Summary</h3>
+        <div class="summary-row">
+            <span>Subtotal</span>
+            <span>${{ total }}</span>
+        </div>
+        <div class="summary-row">
+            <span>Shipping</span>
+            <span>Free</span>
+        </div>
+        <div class="total-row">
+            <span>Total</span>
+            <span>${{ total }}</span>
+        </div>
+        {% if needs_prescription %}
+        <div class="prescription-alert">
+            <strong>One or more items in your cart require a prescription.</strong><br>
+            You will be asked to upload it during checkout.
+        </div>
+        {% endif %}
+        <a href="{% url 'checkout' %}" class="btn-checkout">Proceed to Checkout</a>
+    </div>
+</div>
+{% endblock %}

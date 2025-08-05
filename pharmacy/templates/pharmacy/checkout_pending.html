@@ -1,0 +1,11 @@
+{% extends 'pharmacy/base.html' %}
+
+{% block content %}
+  <h2>Prescription Submitted</h2>
+  <div class="alert alert-info">
+    Your prescription has been submitted and is awaiting pharmacist validation.
+  </div>
+
+  <p>You will be notified once it is approved, and your order will then be processed.</p>
+  <a href="{% url 'products' %}" class="btn btn-primary mt-3">Back to Products</a>
+{% endblock %}

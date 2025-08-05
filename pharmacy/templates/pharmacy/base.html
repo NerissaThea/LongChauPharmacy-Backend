@@ -1,0 +1,48 @@
+{% load static %}
+{% load group_tags %}
+
+<!DOCTYPE html>
+<html>
+<head>
+    <title>LongChauPharmacy</title>
+    <link rel="stylesheet" href="{% static 'pharmacy/css/style.css' %}">
+</head>
+<body>
+    <div class="top-nav">
+        <div class="logo-search">
+            <a href="{% url 'products' %}">
+                <img src="{% static 'pharmacy/images/logo.png' %}" alt="LongChau Pharmacy" class="logo">
+            </a>
+        </div>
+        <div class="nav-actions">
+            {% if user.is_authenticated %}
+                <span style="color: white; margin-right: 15px;">Hi, {{ user.username }}</span>
+                {% if user|has_group:"Pharmacist" %}
+                    <a href="{% url 'pharmacist_queue' %}" class="btn">Prescriptions</a>
+                {% endif %}
+                <a href="{% url 'cart' %}" class="btn">Cart</a>
+                <a href="{% url 'order_history' %}" class="btn">Order History</a>
+                <a href="{% url 'profile' %}" class="btn">My Account</a>
+                <form action="{% url 'logout' %}" method="post" style="display:inline;">
+                    {% csrf_token %}
+                    <button type="submit" class="btn">Logout</button>
+                </form>
+            {% else %}
+                <a href="{% url 'login' %}" class="login-btn">Login</a>
+                <a href="{% url 'signup' %}" class="register-btn">Sign Up</a>
+            {% endif %}
+        </div>
+    </div>
+    <div class="banner">
+        <div class="banner-content">
+            <h1>Welcome to Long Châu Pharmacy</h1>
+            <p>Your trusted partner in health and wellness.</p>
+        </div>
+        <img src="{% static 'pharmacy/images/banner-image.png' %}" alt="Banner" class="banner-img">
+    </div>
+
+    <div class="container-xl">
+        {% block content %}{% endblock %}
+    </div>
+</body>
+</html>

@@ -1,0 +1,28 @@
+{% extends 'pharmacy/base.html' %}
+
+{% block content %}
+<section class="products-section">
+    <h2>Available Products</h2>
+    <div class="product-list">
+        {% for product in products %}
+        <div class="product-card">
+            <div class="product-image-placeholder">
+                <span>Image not available</span>
+            </div>
+            <div class="product-info">
+                <h5>{{ product.name }}</h5>
+                <p class="description">{{ product.description }}</p>
+                <div class="price-stock">
+                    <span class="price">${{ product.price }}</span>
+                    <span class="stock">Stock: {{ product.stock }}</span>
+                </div>
+                {% if product.requires_prescription %}
+                <div class="prescription-badge">Prescription required</div>
+                {% endif %}
+                <a href="{% url 'add_to_cart' product.id %}" class="btn">Add to Cart</a>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+</section>
+{% endblock %}

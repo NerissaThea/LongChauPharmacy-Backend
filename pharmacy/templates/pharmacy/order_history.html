@@ -1,0 +1,73 @@
+{% extends 'pharmacy/base.html' %}
+
+{% block content %}
+<div class="order-history-container">
+  <h2>My Orders & Prescriptions</h2>
+
+  <h3 class="mt-4">Orders</h3>
+  <table class="order-table">
+      <thead>
+          <tr>
+              <th>Order ID</th>
+              <th>Date</th>
+              <th>Paid</th>
+              <th>Status</th>
+          </tr>
+      </thead>
+      <tbody>
+          {% for order in orders %}
+          <tr>
+              <td>#{{ order.id }}</td>
+              <td>{{ order.created_at|date:"M d, Y H:i" }}</td>
+              <td>{{ order.is_paid|yesno:"Yes,No" }}</td>
+              <td>
+                  {% if order.prescription %}
+                  <span class="badge bg-warning">{{ order.prescription.get_status_display }}</span>
+                  {% else %}
+                  <span class="badge bg-success">Completed</span>
+                  {% endif %}
+              </td>
+          </tr>
+          {% empty %}
+          <tr>
+              <td colspan="4">You haven’t placed any orders yet.</td>
+          </tr>
+          {% endfor %}
+      </tbody>
+  </table>
+
+  <h3>Pending Prescriptions</h3>
+  <table class="order-table">
+      <thead>
+          <tr>
+              <th>Prescription ID</th>
+              <th>Date Uploaded</th>
+              <th>Status</th>
+          </tr>
+      </thead>
+      <tbody>
+          {% for p in prescriptions %}
+          <tr>
+              <td>#{{ p.id }}</td>
+              <td>{{ p.uploaded_at|date:"M d, Y H:i" }}</td>
+              <td>
+                  {% if p.status == "pending" %}
+                  <span class="badge bg-warning">Pending</span>
+                  {% elif p.status == "approved" %}
+                  <span class="badge bg-success">Approved</span>
+                  {% elif p.status == "rejected" %}
+                  <span class="badge bg-danger">Rejected</span>
+                  {% else %}
+                  <span class="badge bg-info">{{ p.status|title }}</span>
+                  {% endif %}
+              </td>
+          </tr>
+          {% empty %}
+          <tr>
+              <td colspan="3">You have no un-assigned prescriptions.</td>
+          </tr>
+          {% endfor %}
+      </tbody>
+  </table>
+</div>
+{% endblock %}

@@ -1,0 +1,40 @@
+{% extends 'pharmacy/base.html' %}
+
+{% block content %}
+<h2>Checkout</h2>
+
+
+{# pharmacy/templates/pharmacy/checkout.html #}
+<form method="post" enctype="multipart/form-data">
+  {% csrf_token %}
+
+  <div class="mb-3">
+    {{ form.delivery_method.label_tag }}
+    {{ form.delivery_method }}
+  </div>
+
+  <div class="mb-3">
+    {{ form.payment_method.label_tag }}
+    {{ form.payment_method }}
+  </div>
+
+  {# Only ask for a file if the order actually needs one #}
+  {% if needs_prescription %}
+    <div class="alert alert-warning">
+      This order contains prescription-only items. Please upload below.
+    </div>
+    <div class="mb-3">
+      {{ form.prescription_file.label_tag }}
+      {{ form.prescription_file }}
+      {% if form.errors.prescription_file %}
+        <div class="text-danger">
+          {{ form.errors.prescription_file.0 }}
+        </div>
+      {% endif %}
+    </div>
+  {% endif %}
+
+  <button type="submit" class="btn btn-success">Place Order</button>
+</form>
+
+{% endblock %}

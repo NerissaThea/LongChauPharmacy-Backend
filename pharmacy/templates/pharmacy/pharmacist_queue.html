@@ -1,0 +1,40 @@
+{% extends 'pharmacy/base.html' %}
+{% block content %}
+<h2>Pending Prescriptions</h2>
+
+{% if prescriptions %}
+<table class="table">
+  <thead>
+    <tr>
+      <th>User</th>
+      <th>Uploaded</th>
+      <th>Order</th>
+      <th>File</th>
+      <th>Action</th>
+    </tr>
+  </thead>
+  <tbody>
+    {% for p in prescriptions %}
+    <tr>
+      <td>{{ p.user.username }}</td>
+      <td>{{ p.uploaded_at }}</td>
+      <td>
+        {% if p.order %}
+          <a href="{% url 'order_detail' p.order.id %}">Order #{{ p.order.id }}</a>
+        {% else %}
+          N/A
+        {% endif %}
+      </td>
+      <td><a href="{{ p.file.url }}" target="_blank">View</a></td>
+      <td>
+        <a href="{% url 'prescription_action' p.pk 'approve' %}" class="btn btn-success btn-sm">Approve</a>
+        <a href="{% url 'prescription_action' p.pk 'reject' %}" class="btn btn-danger btn-sm">Reject</a>
+      </td>
+    </tr>
+    {% endfor %}
+  </tbody>
+</table>
+{% else %}
+  <p>No pending prescriptions.</p>
+{% endif %}
+{% endblock %}
